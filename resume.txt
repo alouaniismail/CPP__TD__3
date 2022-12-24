@@ -1,0 +1,70 @@
+1.
+Uniquement virtual: devant la mère:
+Uniquement virtual: devant la fille:
+virtual devant les deux. 
+faits.
+virtual autorise un polymorphisme en utilisation par rapport au typage(à quoi cela sert)
+lheritage public rend le typage polymorphe, un héritage private qui se fera si on veut un lien a-un se fera vis-a-vis d'une interface(héritage virtuel) où seulement les classes/fonctions ou sous-.. [amis/(es)] peuvent acceder a un typage correspondant a un polymorphisme(utiliser(le voyons ici.//)) cette notion vis-a-vis de references dans la plupart des cas, changeant a chaque reprise de copie..
+Discutons sur valgrind:
+pas d'erreurs, on a supprimé que Mere qui est via un pointeur donc appel a delete seulement c'est une recopie de fille est la classe d'où elle héritent, normalement en héritage l'appel à delete non declaree pour une fille entraine l'appel a une delete pour la classe mere automatiquement, en fait pour le polymorphisme vue l'allocation dynamique donc 2 ### @ vis-a-vis du tas même si recopie, le delete pour l'un supprime l'autre car la classe fille a besoin de la mere pour qu'elle ai un sens et la classe mere doit exister pour implementer correctement la fille, on parle d'@ vis-a-vis d'un delete sur une classe même si le contexte mais en recopie.
+====================================
+(c'est comme le constructeur qui appelle le constructeur sauf surcharge en premier lieu.)((rq srtout))
+liaison d'appel de fonctions d'où né ce concept de fonctions virtuelles (choisir lesquelles, éviter des surchargements avec des cascade d'héritages multiples(en losange))
+=>
+Pour provoquer une liaison tardive pour une fonction particulière, le C++ impose que vous utilisiez le mot-clef virtual quand vous déclarez la fonction dans la classe de base. La liaison tardive n'a lieu que pour les fonctions virtuelles, et seulement lorsque vous utilisez une adresse de la classe de base où ces fonctions virtuelles existent, bien qu'elles puissent être également définies dans une classe de base antérieure.
+
+Pour créer une fonction membre virtual, vous n'avez qu'à faire précéder la déclaration de la fonction du mot-clef virtual. Seule, la déclaration nécessite ce mot-clef, pas la définition. Si une fonction est déclarée virtual dans la classe de base, ****elle est virtual dans toutes les classes dérivées****. La redéfinition d'une fonction virtuelle dans une classe dérivée est généralement appelée redéfinition(overriding, ndt).
+
+Remarquez que vous n'avez à déclarer une fonction virtual que dans la classe de base. Toutes les fonctions des classes dérivées dont signature correspond à celle de la déclaration dans la classe de base seront appelées en utilisant le mécanisme virtuel. Vous pouvez utiliser le mot-clef virtual dans les déclarations des classes dérivées (cela ne fait aucun mal), mais c'est redondant et cela peut prêter à confusion.
+
+=>
+Quand c'est le cas, la définition “la plus proche” dans la hiérarchie de l'héritage est utilisée automatiquement – le compilateur garantit qu'il y a toujours une définition pour une fonction virtuelle, afin que vous ne vous retrouviez jamais avec un appel qui ne soit pas associé à un corps de fonction. (Ce qui serait désastreux.)
+
+Le tableau A[ ]contient des pointeurs vers la classe de base Instrument, ainsi l'upcasting se produit pendant le processus d'initialisation du tableau. Ce tableau et la fonction f( )seront utilisés dans des discussions ultérieures.
+
+On peut décrire cela comme “envoyer un message à un objet et laisser l'objet se préoccuper de ce qu'il doit faire avec”. La fonction virtual est la lentille à utiliser quand vous essayez d'analyser un projet : où les classes de base devraient-elle se trouver, et comment pourriez-vous vouloir étendre le programme ? Toutefois, même si vous ne trouvez pas les bonnes interfaces de classes de base et les fonctions virtuelles satisfaisantes lors de la création initiale du programme, vous les découvrirez souvent plus tard, même beaucoup plus tard, quand vous vous mettrez à étendre ou sinon à maintenir le programme. Ce n'est pas une erreur d'analyse ou de conception ; cela veut juste dire que vous ne connaissiez ou ne pouviez pas connaître toutes les informations au début. A cause de la modularité serrée des classes en C++, ce n'est pas un gros problème quand cela se produit, parce que les modifications que vous effectuez dans une partie d'un système n'ont pas tendance à se propager à d'autres comme elles le font en C. 
+
+=====================================================================
+
+
+En conclusion:
+l'heritage public permet le polymorphisme des types (pas utilisation) bi-directionnelle a l'exterieur car public. l'ajout d'une virtual en signature en surcharge connue ne modifie rien. Le virtual fixe les redéfinitions: en allocation automatique ca va direct sans saut vers le tas pour trouver le bon pointeur de fonction(algo de résolution piègeux ici) la différence entre les 2 (pile/tas) pour les 3 scénarios de virtual.
+***************************************************************************************************
+
+
+2.FAIT(comments)
+3.
+(Forme Canonique)
+>
+/
+.>
+Personne.hpp et Personne.cpp:
+dans le namespace enseirb.
+=>lieu a-un avec Chaine.
+constructeur qui prend Chaine() en parametre.(const,&,..)
+void afficherNom(Personne& p) dans la liste des methodes.(sur stdout: le nom de la personne)
+=>tout est bien niveau memoire(sans forme canonique(constructeur par recopie;affectation && destructeur))
+4.etudiants:(herite de personne qui herite de chaine)::
+Analysons le problème suivant:
+Si: nom() a comme signature const chaine& nom(),
+d'habitude const chaine& nom() pour respecter cela va faire:(non retour d'une variable local this pointeur!! en des valeurs depilees):->>
+On va commencer par faire ceci:
+Chaine* rslt=new Chaine(Chaine("Eleve :")+Personne::nom());
+cela va créer une allocation de plus seulement.
+puis va retourner *rslt par la suite ou bien faire:
+Chaine& ref=*rslt;return ref; c'est la plus puissante mais celui qui ferait cela a plus de compréhension.
+Le seul problème ici c'est qu'on retourne un const Chaine& avec dans l'ombre une allocation.
+cette allocation, on la retrouve plus apres vue la reference et en plus constante envoyee donc delete a priori c'est impossible(manipulation de valeurs dans la pile via &*&<->rslt.).
+C'est a priori impossible, il faut revoir entierement la structure de nom() de A à Z.
+A priori un friend operator<< au tt debut serait la bienvenue pour resoudre le probleme.
+On re-debute depuis Chaine l'affichage avec un nouveau opérateur d'entrée de sortie nn retour même en friend ici car cela sera une fonction amie qui aura le statut d'une fonction 'statique' en terme d'utilitée (enC++) et via l'héritage publique aucune façon de ne pas l'avoir vie un polymorphisme utilisé:!!
+C'est fait, mais en fait cela nous rapporte quoi en terme d'évidences???
+=>friend ostream& operator<<(ostream& os, const Chaine& c){return os<<c._donnees;}
+Pour que ca marche au moins au niveau du Chaine (make prog && ./prog) ; il faut declarer le using namespace std pour les ostream inclure dans le Chaine.hpp le iostream enlever l'indicateur Chaine:: pour ne pas se lier a un seul argument, voilà. Et cela marcherait. 
+Jusqu'au 5, ca roule. reste le 5 et le 6, géstion lecture commentaires.
+****************************************
+*(2):Partage de données:
+-(voir le repertoir convenable (1/2 du td..))
+FIN de la moitie du td2.
+======
+========================.///
