@@ -37,11 +37,12 @@ namespace enseirb{//on doit redéfinir la variable nom()=>Personne doit acceuill
     //des setters en plus...///
     //pour des accesseurs en lien a-un pas de reference retournee(astuce).
     void setEnseignement(const Chaine&);
-    Chaine nom();//le nom précédé de la mention: "Elève".
+    virtual Chaine nom();//le nom précédé de la mention: "Elève".
     //et les setters passage par référence car nouveau objet indépendant avant et crée avant(donc non soumis à contrôle vis-à-vis de la classe dans notre démarche de tests(testing.//)).
     //const Chaine& nom2();
     //const Chaine& nom2();
-    const Chaine& nom2();
+    const Chaine& nom2();//on a réussi à le traiter comme virtual
+    //et bien oui! c'est permit.
   };
 }
 
