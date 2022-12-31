@@ -9,7 +9,7 @@ Programme.o: Chaine.hpp
 Chaine.o: Chaine.hpp
 
 clean:
-	rm -f *.o prog *.hpp~ *.cpp~ Makefile~ a.out prog_exec2 prog_exec3 prog_exec4
+	rm -f *.o prog *.hpp~ *.cpp~ Makefile~ a.out prog_exec2 prog_exec3 prog_exec4 prog_exec5
 
 prog_exec2: Programme2.cpp Personne.cpp Chaine.cpp
 	g++ $^ -o $@
@@ -29,3 +29,9 @@ prog_exec4: Programme4.cpp Chaine.cpp Personne.cpp Enseignant.cpp Etudiant.cpp
 	./$@
 memcheck4:
 	valgrind ./prog_exec4
+
+prog_exec5:Programme5.cpp EV.cpp Enseignant.cpp Etudiant.cpp Personne.cpp Chaine.cpp 
+	g++ $^ -o $@ 
+	./$@
+memcheck5:
+	valgrind ./prog_exec5
