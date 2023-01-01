@@ -17,3 +17,4 @@ exec: exec_final
 	./$<
 memcheck: exec_final
 	valgrind ./$<
+#c'est la biblio STL de c++11 pas sdl!!!.
