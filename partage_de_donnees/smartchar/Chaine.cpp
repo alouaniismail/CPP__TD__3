@@ -12,14 +12,22 @@ static char* copie(const char* src, unsigned int taille){
 }
 
 static enseirb::SmartPointer vide(copie("",0));
+//ici, on se soucie pas d'avoir un char* double dans le classe
+//et dans le tas via l'appel à copie et la même chose
+//le smartPointer est bien gere ainsi que le delete qui concerne que ca
+//(cycles()___²).
 
 Chaine::Chaine(): _taille(0),_donnees(vide){}
+//transfert simplement:
+//proprietee des pointeurs intelligents.
+
 
 Chaine::Chaine(const char* s): Chaine(){
   if(s==nullptr)
     return;
   _taille=std::strlen(s);
-  _donnees=enseirb::SmartPointer(copie(s,_taille));
+  _donnees=enseirb::SmartPointer(copie(s,_taille));//de même
+  //mais rien à signaler car direct !(pas de case mémoires en jeu)
 }
 
 unsigned int Chaine::taille() const{
@@ -42,7 +50,7 @@ Chaine Chaine::operator+(const Chaine& c)const{
   int tailleTmp=_taille+c._taille;
   if(0==tailleTmp)
     return *this;//le smartPointer gere les failles ici...
-  //il faut retourner une Chaine!!!
+  //il faut retourner une Chaine!!!(allocation peut importe)
 
   std::unique_ptr<char[]> autoDelete(new char[tailleTmp+1]);
   if(_taille!=0)
@@ -55,7 +63,12 @@ Chaine Chaine::operator+(const Chaine& c)const{
 
   //on fera une extension prochainement, notamment sur les shared--ptr
   //(pointeurs malins) ainsi que le type prochainement pour les templates
-  //<vector>.
+  //<vector>.(bibliothèque SDL)
+
+  //pas de libération à la fin : delete gestion via le SmartPointer
+  //anti-inclusion:: 'unique_ptr'.(même chose via autoDelete puis
+  //ré-utilisation sans se soucier de valgrind)
+  //<=>but de ces SmartPointer.
 }
 
 
